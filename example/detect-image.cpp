@@ -39,6 +39,7 @@ the use of this software, even if advised of the possibility of such damage.
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include "facedetectcnn.h"
+#include <iostream>
 
 //define the buffer size. Do not change the size!
 //0x9000 = 1024 * (16 * 2 + 4), detect 1024 face at most
@@ -61,6 +62,7 @@ int main(int argc, char* argv[])
 		fprintf(stderr, "Can not load the image file %s.\n", argv[1]);
 		return -1;
 	}
+    cout << image.cols << " " << image.rows << std::endl;
 
 	int * pResults = NULL; 
     //pBuffer is used in the detection functions.
@@ -118,9 +120,13 @@ int main(int argc, char* argv[])
                 p[5], p[6], p[7], p[8], p[9], p[10], p[11], p[12], p[13],p[14]);
 
 	}
-	imshow("result", result_image);
-
-	waitKey();
+	// imshow("result", result_image);
+    auto res = imwrite("result.jpg", result_image);
+	if(res)
+        printf("save success");
+    else
+        printf("save failed.");
+    // waitKey();
 
     //release the buffer
     free(pBuffer);

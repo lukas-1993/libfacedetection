@@ -1,13 +1,17 @@
 # CMakeLists for libfacedetectcnn
 
+cmake_minimum_required(VERSION 2.8.12)
 project(libfacedetection)
 
-cmake_minimum_required(VERSION 2.8.12)
+message("Using C compiler   : ${CMAKE_C_COMPILER}")
+message("Using CXX Compiler : ${CMAKE_CXX_COMPILER} ")
+message("CMAKE_PREFIX_PATH  : ${CMAKE_PREFIX_PATH} ")
+ 
 
 option(ENABLE_NEON "whether use neon, if use arm please set it on" OFF)
 option(ENABLE_AVX512 "use avx512" OFF)
-option(ENABLE_AVX2 "use avx2" ON)
-option(DEMO "build the demo" OFF)
+option(ENABLE_AVX2 "use avx2" OFF)
+option(DEMO "build the demo" ON)
 option(USE_OPENMP "Use OpenMP" ON)
 
 if (BUILD_SHARED_LIBS)
@@ -154,6 +158,8 @@ install(FILES "${CMAKE_BINARY_DIR}/${fdt_lib_name}ConfigVersion.cmake" DESTINATI
 # Create demo. OpenCV is requred.
 if (DEMO)
     find_package(OpenCV REQUIRED)
+    message("Find OpenCV ${OpenCV_INCLUDE_DIRS}")
+
     include_directories(${OpenCV_INCLUDE_DIRS})
 
     add_executable(detect-image-demo ${fdt_base_dir}/example/detect-image.cpp)
@@ -164,6 +170,10 @@ if (DEMO)
     
     add_executable(benchmark ${fdt_base_dir}/example/benchmark.cpp)
     target_link_libraries(benchmark ${fdt_lib_name} ${OpenCV_LIBS})
+
+    add_executable(realtime-stream ${fdt_base_dir}/example/realtime-stream.cpp)
+    target_link_libraries(realtime-stream ${fdt_lib_name} ${OpenCV_LIBS})
+
 endif()
 
 if (GSTREAMER)
